@@ -13,8 +13,8 @@ const app = express();
 
 // Middleware
 const allowedOrigins = [
-  "http://localhost:3000",
   "https://hotel-resturant-mangement-system.vercel.app",
+  "http://localhost:3000",
 ];
 
 app.use(
@@ -82,7 +82,7 @@ const httpServer = createServer(app);
 
 const io = new Server(httpServer, {
   cors: {
-    origin: 'http://localhost:3000',
+    origin: allowedOrigins, // Isse 'http://localhost:3000' ki jagah change karein
     credentials: true,
   },
 });

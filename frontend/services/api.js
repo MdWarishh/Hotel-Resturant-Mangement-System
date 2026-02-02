@@ -9,7 +9,7 @@ const API_BASE_URL =
  */
 const api = axios.create({
   // API_BASE_URL ||
-  baseURL: process.env.NEXT_PUBLIC_API_URL,
+  baseURL: API_BASE_URL,
   withCredentials: true,
   headers: {
     'Content-Type': 'application/json',
