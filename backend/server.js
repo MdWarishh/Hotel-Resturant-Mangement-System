@@ -15,6 +15,7 @@ const app = express();
 const allowedOrigins = [
   "https://hotel-resturant-mangement-system.vercel.app",
   "http://localhost:3000",
+  /\.vercel\.app$/ // Ye saare vercel subdomains allow kar dega
 ];
 
 app.use(
