@@ -2,7 +2,8 @@
 'use client';
 
 import { createContext, useContext, useEffect, useState } from 'react';
-import { apiRequest } from '@/services/api';
+// import { apiRequest } from '@/services/api';
+import api from '@/utils/api';
 import { useRouter } from 'next/navigation';
 import { USER_ROLES } from '@/utils/constants';
 
@@ -25,21 +26,6 @@ export const AuthProvider = ({ children }) => {
   //   }
   // };
 
-
-  const fetchProfile = async () => {
-    try {
-      // apiRequest ki jagah api.get use karein
-      const res = await api.get('/auth/me');
-      setUser(res.data.user);
-      // handleRoleRedirect(res.data.user.role); // Isse login page par loop ban sakta hai, dhyan se use karein
-    } catch (err) {
-      logout();
-    } finally {
-      setLoading(false);
-    }
-  };
-
-
   // const login = async (email, password) => {
   //   const res = await apiRequest('/auth/login', {
   //     method: 'POST',
@@ -52,8 +38,21 @@ export const AuthProvider = ({ children }) => {
   // };
 
 
+  const fetchProfile = async () => {
+    try {
+      // apiRequest ki jagah api.get use karein
+      const res = await api.get('/auth/me'); 
+      setUser(res.data.user);
+    } catch (err) {
+      logout();
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const login = async (email, password) => {
-    // apiRequest ki jagah api.post use karein
+    // apiRequest ko hata kar api.post use karein
+    // Axios khud JSON.stringify kar leta hai
     const res = await api.post('/api/auth/login', { email, password });
 
     localStorage.setItem('token', res.data.token);
