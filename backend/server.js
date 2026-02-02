@@ -122,28 +122,22 @@ httpServer.listen(PORT, () => {
 });
 
 // Graceful Shutdown
+// 'server.close' ko 'httpServer.close' se badlein
 const gracefulShutdown = async (signal) => {
   console.log(`\n${signal} received. Starting graceful shutdown...`);
   
-  httpServer.close(async () => {
+  httpServer.close(async () => { // <--- Ye change karein
     console.log('✅ HTTP server closed');
-    
     try {
       await mongoose.connection.close();
       console.log('✅ MongoDB connection closed');
       process.exit(0);
     } catch (error) {
-      console.error('❌ Error during shutdown:', error);
       process.exit(1);
     }
   });
-  
-  // Force shutdown after 10 seconds
-  setTimeout(() => {
-    console.error('⚠️  Forced shutdown after timeout');
-    process.exit(1);
-  }, 10000);
 };
 
 process.on('SIGTERM', () => gracefulShutdown('SIGTERM'));
 process.on('SIGINT', () => gracefulShutdown('SIGINT'));
+

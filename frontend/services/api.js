@@ -1,25 +1,25 @@
 import axios from 'axios';
-// Pehle check karo variable console me kya aa raha hai (Debugging ke liye)
-// Yeh function decide karega ki API URL kya hoga
-const RENDER_URL = "https://hotel-resturant-mangement-system.onrender.com";
+// Render ka live link
+const LIVE_BACKEND_URL = "https://hotel-resturant-mangement-system.onrender.com";
 
 const getBaseURL = () => {
   if (typeof window !== 'undefined') {
-    // Agar localhost nahi hai, toh seedha Render URL return karo
+    // Agar URL me vercel.app hai, to bina soche Render use karo
+    if (window.location.hostname.includes('vercel.app')) {
+      return LIVE_BACKEND_URL;
+    }
+    // Agar localhost nahi hai (jaise ki custom domain), to bhi Render use karo
     if (window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1') {
-      return RENDER_URL;
+      return LIVE_BACKEND_URL;
     }
   }
-  // Local development ke liye
-  return "http://localhost:5000";
+  return "http://localhost:5000"; // Local ke liye default
 };
 
 const api = axios.create({
   baseURL: getBaseURL(),
   withCredentials: true,
-  headers: {
-    'Content-Type': 'application/json',
-  },
+  headers: { 'Content-Type': 'application/json' },
 });
 
 /**
