@@ -2,9 +2,9 @@
 'use client';
 
 import { createContext, useContext, useEffect, useState } from 'react';
+import { apiRequest } from '@/services/api';
 import { useRouter } from 'next/navigation';
 import { USER_ROLES } from '@/utils/constants';
-import { apiRequest } from '@/services/api';
 
 const AuthContext = createContext(null);
 
@@ -13,35 +13,11 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
   const router = useRouter();
 
-  // const fetchProfile = async () => {
-  //   try {
-  //     const res = await apiRequest('/auth/me');
-  //     setUser(res.data.user);
-  //     handleRoleRedirect(res.data.user.role);
-  //   } catch (err) {
-  //     logout();
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
-
-  // const login = async (email, password) => {
-  //   const res = await apiRequest('/auth/login', {
-  //     method: 'POST',
-  //     body: JSON.stringify({ email, password }),
-  //   });
-
-  //   localStorage.setItem('token', res.data.token);
-  //   setUser(res.data.user);
-  //   handleRoleRedirect(res.data.user.role);
-  // };
-
-
   const fetchProfile = async () => {
     try {
-      // apiRequest ki jagah api.get use karein
-      const res = await apiRequest.get('/auth/me'); 
+      const res = await apiRequest('/auth/me');
       setUser(res.data.user);
+      handleRoleRedirect(res.data.user.role);
     } catch (err) {
       logout();
     } finally {
@@ -50,15 +26,15 @@ export const AuthProvider = ({ children }) => {
   };
 
   const login = async (email, password) => {
-    // apiRequest ko hata kar api.post use karein
-    // Axios khud JSON.stringify kar leta hai
-    const res = await apiRequest.post('/api/auth/login', { email, password });
+    const res = await apiRequest('/auth/login', {
+      method: 'POST',
+      body: JSON.stringify({ email, password }),
+    });
 
     localStorage.setItem('token', res.data.token);
     setUser(res.data.user);
     handleRoleRedirect(res.data.user.role);
   };
-
 
   const logout = () => {
     localStorage.removeItem('token');
