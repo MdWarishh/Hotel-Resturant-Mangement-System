@@ -1,8 +1,13 @@
 import { io } from 'socket.io-client';
 
-const SOCKET_URL =
-  process.env.NEXT_PUBLIC_SOCKET_URL ||
-  'http://localhost:5000';
+const getSocketURL = () => {
+  if (typeof window !== 'undefined' && window.location.hostname !== 'localhost') {
+    return "https://hotel-resturant-mangement-system.onrender.com";
+  }
+  return "http://localhost:5000";
+};
+
+const SOCKET_URL = getSocketURL();
 
 let socket = null;
 
