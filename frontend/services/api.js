@@ -1,5 +1,6 @@
 import axios from 'axios';
-
+// Pehle check karo variable console me kya aa raha hai (Debugging ke liye)
+console.log("API URL being used:", process.env.NEXT_PUBLIC_API_URL);
 const API_BASE_URL =
   process.env.NEXT_PUBLIC_API_BASE_URL;
 
