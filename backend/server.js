@@ -12,10 +12,21 @@ dotenv.config();
 const app = express();
 
 // Middleware
+const allowedOrigins = [
+  "http://localhost:3000",
+  "https://hotel-resturant-mangement-system.vercel.app",
+];
+
 app.use(
   cors({
-    origin: "http://localhost:3000", // ❌ NOT "*"
-    credentials: true,               // ✅ allow cookies
+    origin: function (origin, callback) {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
+    credentials: true,
   })
 );
 app.use(express.json());
