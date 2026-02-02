@@ -1,15 +1,18 @@
 import axios from 'axios';
 // Pehle check karo variable console me kya aa raha hai (Debugging ke liye)
 console.log("API URL being used:", process.env.NEXT_PUBLIC_API_URL);
-const API_BASE_URL =
-  process.env.NEXT_PUBLIC_API_BASE_URL;
+const isLocalhost = Boolean(
+  window.location.hostname === 'localhost' ||
+  window.location.hostname === '[::1]' ||
+  window.location.hostname.match(/^127(?:\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)){3}$/)
+);
 
-/**
- * Central Axios Instance
- * Used across the entire frontend
- */
+// Agar local hai to localhost use karega, nahi to Render ka link
+const API_BASE_URL = isLocalhost 
+  ? "http://localhost:5000" 
+  : "https://hotel-resturant-mangement-system.onrender.com";
+
 const api = axios.create({
-  // API_BASE_URL ||
   baseURL: API_BASE_URL,
   withCredentials: true,
   headers: {
