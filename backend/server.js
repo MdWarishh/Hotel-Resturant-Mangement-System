@@ -12,18 +12,28 @@ dotenv.config();
 const app = express();
 
 // Middleware
+// 1. DYNAMIC CORS SETUP (Local aur Live dono ke liye)
 const allowedOrigins = [
-  "https://hotel-resturant-mangement-system.vercel.app",
   "http://localhost:3000",
-  /\.vercel\.app$/ // Ye saare vercel subdomains allow kar dega
+  "https://hotel-resturant-mangement-system.vercel.app",
 ];
 
 app.use(
   cors({
-    origin: allowedOrigins,
+    origin: function (origin, callback) {
+      // allow requests with no origin (like mobile apps or curl requests)
+      if (!origin) return callback(null, true);
+      if (allowedOrigins.indexOf(origin) !== -1 || /vercel\.app$/.test(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
     credentials: true,
   })
 );
+
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -83,7 +93,7 @@ const httpServer = createServer(app);
 
 const io = new Server(httpServer, {
   cors: {
-    origin: allowedOrigins, // Isse 'http://localhost:3000' ki jagah change karein
+    origin: allowedOrigins,
     credentials: true,
   },
 });
@@ -116,23 +126,24 @@ posNamespace.on('connection', (socket) => {
 // 🔗 Make io available in controllers
 app.set('io', io);
 
-httpServer.listen(PORT, () => {
+httpServer.listen(PORT,'0.0.0.0', () => {
   console.log(`🚀 Server running on port ${PORT}`);
   console.log(`📡 Socket.IO enabled at /pos`);
 });
 
 // Graceful Shutdown
-// 'server.close' ko 'httpServer.close' se badlein
 const gracefulShutdown = async (signal) => {
   console.log(`\n${signal} received. Starting graceful shutdown...`);
   
-  httpServer.close(async () => { // <--- Ye change karein
+  // 'server.close' ki jagah 'httpServer.close' karein
+  httpServer.close(async () => {
     console.log('✅ HTTP server closed');
     try {
       await mongoose.connection.close();
       console.log('✅ MongoDB connection closed');
       process.exit(0);
     } catch (error) {
+      console.error('❌ Error during shutdown:', error);
       process.exit(1);
     }
   });
@@ -140,4 +151,3 @@ const gracefulShutdown = async (signal) => {
 
 process.on('SIGTERM', () => gracefulShutdown('SIGTERM'));
 process.on('SIGINT', () => gracefulShutdown('SIGINT'));
-
