@@ -1,6 +1,7 @@
+'use client';
+
 // app/hotel-admin/inventory/create/page.js  (or your exact path)
 
-'use client';
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';

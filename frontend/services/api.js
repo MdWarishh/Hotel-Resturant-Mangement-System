@@ -1,20 +1,15 @@
 import axios from 'axios';
 
-const getBaseURL = () => {
-  if (typeof window !== 'undefined') {
-    // Agar vercel par ho to Render ka URL return karo
-    if (window.location.hostname.includes('vercel.app')) {
-      return "https://hotel-resturant-mangement-system.onrender.com";
-    }
-  }
-  return "http://localhost:5000";
-};
-
 const api = axios.create({
-  baseURL: getBaseURL(),
+  // Direct hardcode Render URL for live, localhost for dev
+  baseURL: typeof window !== 'undefined' && window.location.hostname !== 'localhost'
+    ? "https://hotel-resturant-mangement-system.onrender.com"
+    : "http://localhost:5000",
   withCredentials: true,
-  headers: { 'Content-Type': 'application/json' },
+  headers: { 'Content-Type': 'application/json' }
 });
+
+
 
 // Interceptor for Token
 api.interceptors.request.use((config) => {
