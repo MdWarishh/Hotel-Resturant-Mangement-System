@@ -13,11 +13,25 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
   const router = useRouter();
 
+  // const fetchProfile = async () => {
+  //   try {
+  //     const res = await apiRequest('/auth/me');
+  //     setUser(res.data.user);
+  //     handleRoleRedirect(res.data.user.role);
+  //   } catch (err) {
+  //     logout();
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
+
+
   const fetchProfile = async () => {
     try {
-      const res = await apiRequest('/auth/me');
+      // apiRequest ki jagah api.get use karein
+      const res = await api.get('/auth/me');
       setUser(res.data.user);
-      handleRoleRedirect(res.data.user.role);
+      // handleRoleRedirect(res.data.user.role); // Isse login page par loop ban sakta hai, dhyan se use karein
     } catch (err) {
       logout();
     } finally {
@@ -25,17 +39,29 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+
+  // const login = async (email, password) => {
+  //   const res = await apiRequest('/auth/login', {
+  //     method: 'POST',
+  //     body: JSON.stringify({ email, password }),
+  //   });
+
+  //   localStorage.setItem('token', res.data.token);
+  //   setUser(res.data.user);
+  //   handleRoleRedirect(res.data.user.role);
+  // };
+
+
   const login = async (email, password) => {
-    const res = await apiRequest('/auth/login', {
-      method: 'POST',
-      body: JSON.stringify({ email, password }),
-    });
+    // apiRequest ki jagah api.post use karein
+    const res = await api.post('/api/auth/login', { email, password });
 
     localStorage.setItem('token', res.data.token);
     setUser(res.data.user);
     handleRoleRedirect(res.data.user.role);
   };
 
+  
   const logout = () => {
     localStorage.removeItem('token');
     setUser(null);
