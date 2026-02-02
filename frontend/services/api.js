@@ -1,11 +1,21 @@
 import axios from 'axios';
 // Pehle check karo variable console me kya aa raha hai (Debugging ke liye)
 // Yeh function decide karega ki API URL kya hoga
-const API_BASE_URL = "https://hotel-resturant-mangement-system.onrender.com";
-console.log("API URL being used:", process.env.NEXT_PUBLIC_API_URL);
+const RENDER_URL = "https://hotel-resturant-mangement-system.onrender.com";
+
+const getBaseURL = () => {
+  if (typeof window !== 'undefined') {
+    // Agar localhost nahi hai, toh seedha Render URL return karo
+    if (window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1') {
+      return RENDER_URL;
+    }
+  }
+  // Local development ke liye
+  return "http://localhost:5000";
+};
 
 const api = axios.create({
-  baseURL: API_BASE_URL,
+  baseURL: getBaseURL(),
   withCredentials: true,
   headers: {
     'Content-Type': 'application/json',

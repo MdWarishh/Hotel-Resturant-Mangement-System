@@ -125,7 +125,7 @@ httpServer.listen(PORT, () => {
 const gracefulShutdown = async (signal) => {
   console.log(`\n${signal} received. Starting graceful shutdown...`);
   
-  server.close(async () => {
+  httpServer.close(async () => {
     console.log('✅ HTTP server closed');
     
     try {

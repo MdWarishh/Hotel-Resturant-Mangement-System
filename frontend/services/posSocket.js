@@ -1,13 +1,10 @@
 import { io } from 'socket.io-client';
 
-const getSocketURL = () => {
-  if (typeof window !== 'undefined' && window.location.hostname !== 'localhost') {
-    return "https://hotel-resturant-mangement-system.onrender.com";
-  }
-  return "http://localhost:5000";
-};
 
-const SOCKET_URL = getSocketURL();
+
+const SOCKET_URL = typeof window !== 'undefined' && window.location.hostname !== 'localhost'
+  ? 'https://hotel-resturant-mangement-system.onrender.com'
+  : 'http://localhost:5000';
 
 let socket = null;
 
